@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>Clothing Dontation Box Locations in Toronto</title>
+<style> 
+  html, body, #viewDiv {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+  }
+</style>
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+<script src="https://js.arcgis.com/4.5/"></script>
+<script>
+require([
+  "esri/Map",
+  "esri/views/MapView",
+  "esri/layers/FeatureLayer",
+  "esri/PopupTemplate",
+  "esri/widgets/Popup", 
+  "esri/widgets/Search",
+  "dojo/domReady!"
+], function(Map, MapView, FeatureLayer, PopupTemplate, Search){
+
+  var map = new Map({
+  basemap: "streets"
+  });
+  
+  var view = new MapView({
+    container: "viewDiv",  // Reference to the scene div created in step 5
+    map: map,  // Reference to the map object created before the scene
+    zoom: 11,  // Sets zoom level based on level of detail (LOD)
+    center: [-79.390444, 43.726601]  // Sets center point of view using longitude,latitude, this is the center if Toronto
+  });
+   
+  var template = new PopupTemplate ({
+  title: "{Street_No} {Street_Name}, {City}, {Province}, {Postal_Code}",
+  content: "<p> Permit number: {Permit_No} <br /> Company Name: {Operating_Name} </p>"
+  });
+  
+  var fl = new FeatureLayer({
+  url: "https://services1.arcgis.com/9NvE8jKNWWlDGsUJ/arcgis/rest/services/Clothing_Donation_Drop_Box_Permits_Issued_for_The_City_of_Toronto/FeatureServer",
+  outFields: ["*"],
+  popupTemplate: template
+  });
+  
+  
+  var search = new Search({
+  view: view
+    });
+	
+   view.ui.add(search, "top-right");
+
+   map.add(fl);
+  
+  
+});
+</script>
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
+</html>
