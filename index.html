@@ -1,17 +1,35 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<title>Clothing Dontation Box Locations in Toronto</title>
+<title> Clothing Drop-Box Locations in the City of Toronto </title> 
+
 <style> 
   html, body, #viewDiv {
     padding: 0;
     margin: 0;
     height: 100%;
     width: 100%;
+
   }
+
+  
+u1 {
+
+width: 100%;
+height: 100%;
+border-style: solid;
+background-color: ForestGreen;
+padding: 30px;
+}
+
+u2 {
+width: 75%;
+}
+
 </style>
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
@@ -23,9 +41,10 @@ require([
   "esri/layers/FeatureLayer",
   "esri/PopupTemplate",
   "esri/widgets/Popup", 
+  "esri/widgets/BasemapToggle", 
   "esri/widgets/Search",
   "dojo/domReady!"
-], function(Map, MapView, FeatureLayer, PopupTemplate, Search){
+], function(Map, MapView,FeatureLayer, PopupTemplate, Locator, Search, BasemapToggle){
 
   var map = new Map({
   basemap: "streets"
@@ -35,8 +54,9 @@ require([
     container: "viewDiv",  // Reference to the scene div created in step 5
     map: map,  // Reference to the map object created before the scene
     zoom: 11,  // Sets zoom level based on level of detail (LOD)
-    center: [-79.390444, 43.726601]  // Sets center point of view using longitude,latitude, this is the center if Toronto
+    center: [-79.390444, 43.726601]  // Sets center point of view using longitude,latitude, this is the center if Toronto	
   });
+   
    
   var template = new PopupTemplate ({
   title: "{Street_No} {Street_Name}, {City}, {Province}, {Postal_Code}",
@@ -49,6 +69,16 @@ require([
   popupTemplate: template
   });
   
+  var f2 = new FeatureLayer ({
+  url: "http://services.arcgis.com/As5CFN3ThbQpy8Ph/arcgis/rest/services/Toronto_Boundary/FeatureServer"
+  });
+  
+  var basemapToggle = new BasemapToggle({
+  view: view,
+  nextBasemap: "satellite"
+  });
+  view.ui.add(basemapToggle, "top-right");
+  
   
   var search = new Search({
   view: view
@@ -56,13 +86,28 @@ require([
 	
    view.ui.add(search, "top-right");
 
-   map.add(fl);
   
+   map.add(fl);
+   map.add(f2);
   
 });
 </script>
 </head>
 <body>
-  <div id="viewDiv"></div>
+
+<u1>
+<font face="Helvetica" color="white" size="8"> <head>Clothing Drop-Box Locations in Toronto</head> </font>
+</u1>
+<hr>
+<u2>
+<font face="Helvetica" color="black" size="5"> <p> This interactive map displays the addresses
+of all the Clothing Drop-Off Boxes governed by permits in the City of Toronto, 
+along with their exact addresses, the permit number that governs the specific drop-box, and the organization that owns the permit. </p> 
+<p> The data used is from the City of Toronto's Open Source Data Catalogue, and is current as of 2016.</p> </font>
+
+</u2>
+
+<div id="viewDiv"></div>
+  
 </body>
 </html>
